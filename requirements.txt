@@ -1,9 +1,9 @@
 # VectraHub GPU Server - Python Dependencies
 
-# Core dependencies
-torch==2.2.0
-torchvision==0.17.0
-torchaudio==2.2.0
+# Core dependencies - torch already in base image
+# torch==2.2.0
+# torchvision==0.17.0
+# torchaudio==2.2.0
 
 # Image processing
 Pillow>=9.5.0

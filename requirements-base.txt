@@ -1,2 +1,2 @@
 # Base dependencies - install first to ensure compatibility
-numpy==1.24.3
+numpy==1.26.0
