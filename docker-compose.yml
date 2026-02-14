@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  omnisvg-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: omnisvg-server:latest
+    container_name: omnisvg-server
+    
+    # GPU support
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    
+    # Environment variables
+    environment:
+      - APP_BASE_URL=https://pixel2vector.com
+      - SVG_UPLOAD_SECRET=${SVG_UPLOAD_SECRET}
+      - FILE_PROXY_SECRET=${FILE_PROXY_SECRET}
+      - USE_OMNISVG=true
+      - ENABLE_FALLBACK=true
+      - HF_HOME=/app/models
+      - TORCH_HOME=/app/models
+    
+    # Volumes
+    volumes:
+      # Model cache (persistent)
+      - model-cache:/app/models
+      # Output directory
+      - ./outputs:/app/outputs
+      # Temporary files
+      - ./temp:/app/temp
+      # Network volume for large models (if available)
+      - runpod-volume:/runpod-volume
+    
+    # Ports (for local API testing)
+    ports:
+      - "8000:8000"
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+# Named volumes
+volumes:
+  model-cache:
+    driver: local
+  runpod-volume:
+    driver: local
