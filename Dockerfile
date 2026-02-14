@@ -49,13 +49,7 @@ RUN mkdir -p /app/models /app/outputs /app/temp /app/omnisvg_repo
 RUN python3 -c "from transformers import CLIPProcessor, CLIPModel; CLIPModel.from_pretrained('openai/clip-vit-base-patch32'); CLIPProcessor.from_pretrained('openai/clip-vit-base-patch32')" || true
 
 # Pre-download Real-ESRGAN model (~65MB) - baked into image
-RUN python3 -c "
-import torch
-from basicsr.archs.rrdbnet_arch import RRDBNet
-from realesrgan import RealESRGANer
-model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
-upsampler = RealESRGANer(scale=2, model_path='https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth', model=model, tile=0, pre_pad=0, half=True)
-" || true
+RUN python3 -c "import torch; from basicsr.archs.rrdbnet_arch import RRDBNet; from realesrgan import RealESRGANer; model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2); upsampler = RealESRGANer(scale=2, model_path='https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth', model=model, tile=0, pre_pad=0, half=True)" || true
 
 # Clone OmniSVG repository (code only, ~50MB) - baked into image
 # Models will be downloaded at runtime to Network Volume
