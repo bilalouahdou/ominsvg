@@ -1,8 +1,8 @@
 # VectraHub GPU Server - Python Dependencies
 
-# Core dependencies - torch already in base image
+# Core dependencies - torch already in base image, but torchvision needed explicitly
 # torch==2.2.0
-# torchvision==0.17.0
+torchvision==0.17.0
 # torchaudio==2.2.0
 
 
@@ -14,8 +14,8 @@ scikit-image>=0.21.0
 scipy>=1.11.0
 cairosvg>=2.7.0
 
-# Deep Learning / Transformers
-transformers>=4.36.0
+# Deep Learning / Transformers - pinned for PyTorch 2.2.0 compatibility
+transformers==4.40.2
 accelerate>=0.25.0
 peft>=0.7.0
 huggingface-hub>=0.19.0
