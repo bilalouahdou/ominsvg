@@ -3,12 +3,8 @@ name: Build and Push Docker Image
 on:
   push:
     branches: [ main, master ]
-    paths:
-      - 'omnisvg-server/**'
   pull_request:
     branches: [ main, master ]
-    paths:
-      - 'omnisvg-server/**'
   workflow_dispatch:
 
 env:
@@ -50,10 +46,11 @@ jobs:
           type=raw,value=latest,enable={{is_default_branch}}
 
     - name: Build and push Docker image
+      id: build-push
       uses: docker/build-push-action@v5
       with:
-        context: ./omnisvg-server
-        file: ./omnisvg-server/Dockerfile
+        context: .
+        file: ./Dockerfile
         platforms: linux/amd64
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
