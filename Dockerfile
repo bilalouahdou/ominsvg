@@ -42,6 +42,17 @@ RUN pip install --no-cache-dir -r requirements-base.txt
 # Install main dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Patch basicsr for torchvision 0.17.0 compatibility (functional_tensor was removed)
+RUN python3 -c "
+import os
+import torch
+tp = os.path.join(torch.__path__[0], 'transforms')
+os.makedirs(tp, exist_ok=True)
+with open(os.path.join(tp, 'functional_tensor.py'), 'w') as f:
+    f.write('# Stub for backwards compatibility\n')
+print('Patched torchvision.transforms.functional_tensor')
+"
+
 # Create directories
 RUN mkdir -p /app/models /app/outputs /app/temp /app/omnisvg_repo
 

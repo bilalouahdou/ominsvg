@@ -5,7 +5,6 @@ Model loading and inference for Real-ESRGAN upscaling.
 """
 import os
 import torch
-from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan import RealESRGANer
 
 from app.config import config
@@ -76,7 +75,9 @@ def load_realesrgan_upsampler(
     if not os.path.exists(model_path):
         download_model(model_name, model_path)
     
-    # Create model architecture
+    # Create model architecture - lazy import to avoid torchvision compatibility issues
+    from basicsr.archs.rrdbnet_arch import RRDBNet
+    
     if scale == 2:
         model = RRDBNet(
             num_in_ch=3,
